@@ -54,10 +54,10 @@ def makeCall(number):
     success=sim800l.call(number,timeout=30,duration=-1)
     print(success)
     if success==2:
-        player = OMXPlayer(Path(filename))
         try:
-            while player.is_playing():
-                time.sleep(0.2)
+        player = OMXPlayer(Path(filename))
+            logging.info(f'Playing?:{player.is_playing()}')
+            player.play_sync()
         except Exception as e:
             logging.error("Error: " + str(e))
         # os.remove(filename)
@@ -71,3 +71,20 @@ def makeCall(number):
 
 
 
+
+def main():
+    # print(getQuote())
+    try:
+        player = OMXPlayer(Path(filename))
+        logging.info(f'Playing?:{player.is_playing()}')
+        player.play_sync()
+    except Exception as err: 
+        logging.error(str(err))
+    
+
+
+
+if __name__ == "__main__":
+    main()
+    print("End of module")
+# EOF
