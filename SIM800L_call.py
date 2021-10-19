@@ -14,6 +14,7 @@ import requests
 def get_random_quote():
     try:
         ## making the get request
+        # response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=anger")
         response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random")
         if response.status_code == 200:
             ## extracting the core data
@@ -41,7 +42,7 @@ def makeCall(number):
     print('making call...')
     print(getQuote())
 
-    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.DEBUG)
 
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
@@ -52,13 +53,13 @@ def makeCall(number):
     if not  sim800l.initATSettings():
         logging.error("Couldn't initialize settings")
     success=sim800l.call(number,timeout=30,duration=-1)
-    print(success)
+    
     if success==2:
         try:
-        player = OMXPlayer(Path(filename))
+            player = OMXPlayer(Path(filename))
             logging.info(f'Playing?:{player.is_playing()}')
             player.play_sync()
-        except Exception as e:
+        except Exception as e: 
             logging.error("Error: " + str(e))
         # os.remove(filename)
 
@@ -69,8 +70,14 @@ def makeCall(number):
     else:
         print("Successfully ended call")
 
+    return success
 
 
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
 
 def main():
     # print(getQuote())
