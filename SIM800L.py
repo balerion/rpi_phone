@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 """
 Project	 	: SIM800 test script 
 Date&Time	: 08th August 2019.
@@ -51,10 +51,12 @@ class SIM800L:
 
     def sendAtCommand(self, command):
         self.command = command
+        logging.info('Sending AT command: '+command)
         try:
             self.ser.write((command + "\r").encode())
-            received = (self.ser.read(20).splitlines()[-1]).decode()
-            logging.debug(received)
+            received='\t'
+            received += (self.ser.read(20).splitlines()[-1]).decode()
+            logging.info(received)
             if "ERROR" in received:
                 return False
             return received
@@ -75,12 +77,12 @@ class SIM800L:
 
     def sendSms(self):
         try:
-            number = raw_input("To >> ")
+            number = input("To >> ")
         except Exception as e:
             logging.error("Error: " + str(e))
             return False
         try:
-            message = raw_input("Insert Message >> ")
+            message = input("Insert Message >> ")
         except Exception as e:
             logging.error("Error: " + str(e))
             return False
@@ -106,26 +108,27 @@ class SIM800L:
         success=0
         if (number==None):
             try:
-                number = raw_input("Insert Number >> ")
+                number = input("Insert Number >> ")
             except Exception as e:
                 logging.error(str(e))
                 return success
 
-        print("\n\r...processing call")
+        logging.info("\n\r...processing call")
         if not self.sendAtCommand("ATD+ " + number + ";"):
+        # if not self.sendAtCommand("ATD" + number):
             logging.error("To send AT command: ATD")
             return success
-        if not self.sendAtCommand("ATL9"):
+        if not self.sendAtCommand("ATL5"):
             logging.error("To send AT command: ATL")
             return success
-        if not self.sendAtCommand("ATM9"):
+        if not self.sendAtCommand("ATM5"):
             logging.error("To send AT command: ATM")
             return success
 
         success=1
         if timeout==None:
             try:
-                number = raw_input("Call established press ENTER if want to END call >> ")
+                number = input("Call established press ENTER if want to END call >> ")
             except Exception as e:
                 logging.error(str(e))
                 return 0
@@ -134,9 +137,9 @@ class SIM800L:
             while time.time() < t0+timeout:
                 try:
                     received = (self.ser.read(20).splitlines()[-1]).decode()
+                    logging.info('\t'+received)
                 except IndexError:
                     received=''
-                logging.debug(received)
                 if "CONN" in received:
                     if duration>=0:
                         time.sleep(duration)
