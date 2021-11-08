@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import SIM800L_call
+import SIM800L_utils
 import configparser
 import sys
 import logging
@@ -70,7 +70,7 @@ def echo(update: Update, context: CallbackContext):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
-def call(update: Update, context: CallbackContext):
+def sim800l_bot(update: Update, context: CallbackContext):
     """Echo the user message."""
     text=update.message.text
     if (text.split()[0].lower()=='call'):
@@ -109,7 +109,7 @@ def main():
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, call))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, sim800l_bot))
 
     # Start the Bot
     updater.start_polling()
