@@ -79,6 +79,19 @@ def call(update: Update, context: CallbackContext):
             update.message.reply_text('calling '+numbers[name])
             call = SIM800L_call.makeCall(numbers[name])
             update.message.reply_text('Call success is {}'.format(call))
+
+    if (text.split()[0].lower()=='receive'):
+        smstext = SIM800L_call.receiveSMS()
+        update.message.reply_text("Unread texts:")
+        for ss in smstext[1:-1]:
+            try:
+                if not ss.isspace():
+                    update.message.reply_text(ss)
+            except Exception as e:
+                logging.error(e)
+
+   
+
     # update.message.reply_text(update.message.text)
 
 
