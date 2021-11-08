@@ -1,4 +1,4 @@
-import time, sys
+import sys
 import logging
 
 from SIM800L import SIM800L
@@ -33,9 +33,20 @@ from omxplayer.player import OMXPlayer
 from pathlib import Path
 def getQuote():
     text=get_random_quote()
-    tts = gTTS(text=text, lang='en')
+    tts = gTTS(text=text, lang='it')
     tts.save(filename)
     return text
+
+
+def receiveSMS():
+    sim800l = SIM800L(portName=COMPORT_NAME)
+    sim800l.openComPort()
+    allsms = sim800l.sendAtCommand(command="AT+CMGL=\"REC UNREAD\"")
+    sim800l.closeComPort()
+    return allsms
+   
+
+    
 
 
 def makeCall(number):
@@ -69,6 +80,7 @@ def makeCall(number):
         logging.error("To send AT command: ATH")
     else:
         print("Successfully ended call")
+    sim800l.closeComPort()
 
     return success
 
