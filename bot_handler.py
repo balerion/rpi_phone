@@ -77,11 +77,11 @@ def sim800l_bot(update: Update, context: CallbackContext):
         name=text.split()[1].lower()
         if (name in numbers):
             update.message.reply_text('calling '+numbers[name])
-            call = SIM800L_call.makeCall(numbers[name])
+            call = SIM800L_utils.makeCall(numbers[name])
             update.message.reply_text('Call success is {}'.format(call))
 
     if (text.split()[0].lower()=='receive'):
-        smstext = SIM800L_call.receiveSMS()
+        smstext = SIM800L_utils.receiveSMS()
         update.message.reply_text("Unread texts:")
         for ss in smstext[1:-1]:
             try:
