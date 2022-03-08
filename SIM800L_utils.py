@@ -46,6 +46,7 @@ def getQuote():
 def receiveSMS():
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
+    sim800l.sendAtCommand(command="AT+CMGF=1")
     allsms = sim800l.sendAtCommand(command="AT+CMGL=\"REC UNREAD\"")
     sim800l.closeComPort()
     return allsms
