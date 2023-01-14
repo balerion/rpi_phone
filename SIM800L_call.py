@@ -1,6 +1,5 @@
-import time, sys
+import sys
 import logging
-
 from SIM800L import SIM800L
 
 

@@ -1,5 +1,4 @@
 from gtts import gTTS 
-import os
 from omxplayer.player import OMXPlayer
 from pathlib import Path
 

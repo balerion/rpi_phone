@@ -21,6 +21,11 @@ for the sound:
 sudo apt-get install gstreamer-1.0
 
 
+python -m pip install pyserial
 gtts
-omxplayer-wrapper
+omxplayer-wrapper (https://python-omxplayer-wrapper.readthedocs.io/en/latest/)
+on mac, brew install dbus, pip install dbus-python
 python-telegram-bot
+
+adding audio to rpi zero
+https://learn.adafruit.com/introducing-the-raspberry-pi-zero/audio-outputs
