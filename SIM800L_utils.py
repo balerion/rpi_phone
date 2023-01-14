@@ -86,10 +86,12 @@ def makeCall(number):
     return success
 
 def resetRadio():
-    try:
-        SIM800L.resetRadio()
-    except Exception as err: 
-        logging.error(str(err))
+    sim800l = SIM800L(portName=COMPORT_NAME)
+    sim800l.openComPort()
+    sim800l.sendAtCommand(command="AT+CFUN=0")
+    sim800l.sendAtCommand(command="AT+CFUN=1")
+    sim800l.closeComPort()
+    return 1
 
 
 def main():
