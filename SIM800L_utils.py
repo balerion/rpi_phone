@@ -1,14 +1,22 @@
 import sys
 import logging
+import requests
 from SIM800L import SIM800L
 
+from gtts import gTTS 
+from omxplayer.player import OMXPlayer
+from pathlib import Path
 
 COMPORT_NAME = "/dev/serial0"
-
-
 filename = "quote.mp3"
 
-import requests
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+
+
 ## function that gets the random quote
 def get_random_quote():
     try:
@@ -27,14 +35,21 @@ def get_random_quote():
     except:
         return ("Something went wrong! Try Again!")
 
-from gtts import gTTS 
-from omxplayer.player import OMXPlayer
-from pathlib import Path
+
 def getQuote():
     text=get_random_quote()
-    tts = gTTS(text=text, lang='en')
+    tts = gTTS(text=text, lang='it')
     tts.save(filename)
     return text
+
+
+def receiveSMS():
+    sim800l = SIM800L(portName=COMPORT_NAME)
+    sim800l.openComPort()
+    sim800l.sendAtCommand(command="AT+CMGF=1")
+    allsms = sim800l.sendAtCommand(command="AT+CMGL=\"REC UNREAD\"")
+    sim800l.closeComPort()
+    return allsms
 
 
 def makeCall(number):
@@ -62,21 +77,14 @@ def makeCall(number):
             logging.error("Error: " + str(e))
         # os.remove(filename)
 
-
-
     if not sim800l.sendAtCommand("ATH"):
         logging.error("To send AT command: ATH")
     else:
         print("Successfully ended call")
+    sim800l.closeComPort()
 
     return success
 
-
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
 
 def main():
     # print(getQuote())

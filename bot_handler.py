@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import SIM800L_call
+import SIM800L_utils
 import configparser
 import sys
 import logging
@@ -71,15 +71,28 @@ def echo(update: Update, context: CallbackContext):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
-def call(update: Update, context: CallbackContext):
+def sim800l_bot(update: Update, context: CallbackContext):
     """Echo the user message."""
     text=update.message.text
     if (text.split()[0].lower()=='call'):
         name=text.split()[1].lower()
         if (name in numbers):
             update.message.reply_text('calling '+numbers[name])
-            call = SIM800L_call.makeCall(numbers[name])
+            call = SIM800L_utils.makeCall(numbers[name])
             update.message.reply_text('Call success is {}'.format(call))
+
+    if (text.split()[0].lower()=='receive'):
+        smstext = SIM800L_utils.receiveSMS()
+        update.message.reply_text("Unread texts:")
+        for ss in smstext[1:-1]:
+            try:
+                if not ss.isspace():
+                    update.message.reply_text(ss)
+            except Exception as e:
+                logging.error(e)
+
+   
+
     # update.message.reply_text(update.message.text)
 
 
@@ -97,7 +110,7 @@ def main(self):
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, call))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, sim800l_bot))
 
     # Start the Bot
     updater.start_polling()
