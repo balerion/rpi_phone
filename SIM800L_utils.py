@@ -85,6 +85,12 @@ def makeCall(number):
 
     return success
 
+def resetRadio():
+    try:
+        SIM800L.resetRadio()
+    except Exception as err: 
+        logging.error(str(err))
+
 
 def main():
     # print(getQuote())

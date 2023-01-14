@@ -91,6 +91,8 @@ class bot():
                 except Exception as e:
                     logging.error(e)
 
+        if (text.split()[0].lower()=='reset'):
+            SIM800L_utils.resetRadio()
     
 
         # update.message.reply_text(update.message.text)
