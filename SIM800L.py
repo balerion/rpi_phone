@@ -9,6 +9,10 @@ import serial
 import logging
 import time, sys
 
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+logger = logging.getLogger(__name__)
 
 class SIM800L:
     def __init__(
@@ -54,13 +58,14 @@ class SIM800L:
         logging.info('Sending AT command: '+command)
         try:
             self.ser.write((command + "\r").encode())
-            received='\t'
-            received += (self.ser.read(20).splitlines()[-1]).decode()
-            logging.info(received)
+            received = [ll.decode('cp1252') for ll in self.ser.readlines()]
+            for rr in received:
+                logging.info(rr)
             if "ERROR" in received:
                 return False
             return received
-        except:
+        except Exception as e:
+            logging.error(e)
             print("Couldn't write on " + self.portName)
             return False
 
@@ -161,3 +166,8 @@ class SIM800L:
             logging.error("To send AT command: ATM")
             return 0
         return 1
+
+if __name__ == "__main__":
+    print("asd")
+
+#EOF
