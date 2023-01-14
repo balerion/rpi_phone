@@ -76,9 +76,9 @@ class bot():
         text=update.message.text
         if (text.split()[0].lower()=='call'):
             name=text.split()[1].lower()
-            if (name in numbers):
-                update.message.reply_text('calling '+numbers[name])
-                call = SIM800L_utils.makeCall(numbers[name])
+            if (name in self.numbers):
+                update.message.reply_text('calling '+self.numbers[name])
+                call = SIM800L_utils.makeCall(self.numbers[name])
                 update.message.reply_text('Call success is {}'.format(call))
 
         if (text.split()[0].lower()=='receive'):
