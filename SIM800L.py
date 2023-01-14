@@ -2,12 +2,12 @@
 """
 Project	 	: SIM800 test script 
 Date&Time	: 08th August 2019.
-Description	: This module consists all API's nececeary for testing SIMcom SIM800H module
+Description	: This module consists all APIs necessary for testing SIMcom SIM800H module
 		http://simcomm2m.com/En/module/detail.aspx?id=75
 """
 import serial
 import logging
-import time, sys, codecs
+import time, sys
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -157,6 +157,15 @@ class SIM800L:
                 return 0            
 
         return success
+
+    def resetRadio():
+        if not self.sendAtCommand("AT+CFUN=0"):
+            logging.error("To send AT command: ATM")
+            return 0
+        if not self.sendAtCommand("AT+CFUN=1"):
+            logging.error("To send AT command: ATM")
+            return 0
+        return 1
 
 if __name__ == "__main__":
     print("asd")

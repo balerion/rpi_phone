@@ -5,48 +5,49 @@ import configparser
 import sys
 import logging
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
+
+TOKEN=0
+
+def __init__(self):
+    # Enable logging
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+    logger = logging.getLogger(__name__)
 
 
-
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
-logger = logging.getLogger(__name__)
-
-
-# load configuration
-config = configparser.ConfigParser()
-try:
-    config.read_file(open('settings.ini'))
-except FileNotFoundError:
+    # load configuration
+    config = configparser.ConfigParser()
     try:
-        tk=input("Insert telegram token >> ")
-        if tk:
-            config['Tokens'] = {'TOKEN':tk}
-        else:
-            logging.error('No telegram token given')
+        config.read_file(open('settings.ini'))
+    except FileNotFoundError:
+        try:
+            tk=input("Insert telegram token >> ")
+            if tk:
+                config['Tokens'] = {'TOKEN':tk}
+            else:
+                logging.error('No telegram token given')
+                sys.exit(1)
+        except Exception as e:
+            logging.error(str(e))
             sys.exit(1)
-    except Exception as e:
-        logging.error(str(e))
-        sys.exit(1)
-    try:
-        name=' '
-        config.add_section('Phonebook')
-        while (name):
-            name=input("enter name >> ")
-            number=input("enter number >> ")
-            if name and number:
-                config.set('Phonebook', name, number)
-    except Exception as e:
-        logging.error(str(e))
-        sys.exit(1)
+        try:
+            name=' '
+            config.add_section('Phonebook')
+            while (name):
+                name=input("enter name >> ")
+                number=input("enter number >> ")
+                if name and number:
+                    config.set('Phonebook', name, number)
+        except Exception as e:
+            logging.error(str(e))
+            sys.exit(1)
 
-    with open('settings.ini', 'w') as configfile:
-        config.write(configfile)
+        with open('settings.ini', 'w') as configfile:
+            config.write(configfile)
 
-numbers = config['Phonebook']
-TOKEN = config['Tokens']['TOKEN']
+    numbers = config['Phonebook']
+    TOKEN = config['Tokens']['TOKEN']
 
 
 
@@ -95,11 +96,11 @@ def sim800l_bot(update: Update, context: CallbackContext):
     # update.message.reply_text(update.message.text)
 
 
-def main():
+def main(self):
 
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(TOKEN)
+    updater = Updater(self.TOKEN)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
