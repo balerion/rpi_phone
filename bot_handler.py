@@ -5,121 +5,121 @@ import configparser
 import sys
 import logging
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-TOKEN=0
+class bot():
+    TOKEN=0
+    def __init__(self):
+        # Enable logging
+        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+        logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+        logger = logging.getLogger(__name__)
 
-def __init__(self):
-    # Enable logging
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
-    logger = logging.getLogger(__name__)
 
-
-    # load configuration
-    config = configparser.ConfigParser()
-    try:
-        config.read_file(open('settings.ini'))
-    except FileNotFoundError:
+        # load configuration
+        config = configparser.ConfigParser()
         try:
-            tk=input("Insert telegram token >> ")
-            if tk:
-                config['Tokens'] = {'TOKEN':tk}
-            else:
-                logging.error('No telegram token given')
-                sys.exit(1)
-        except Exception as e:
-            logging.error(str(e))
-            sys.exit(1)
-        try:
-            name=' '
-            config.add_section('Phonebook')
-            while (name):
-                name=input("enter name >> ")
-                number=input("enter number >> ")
-                if name and number:
-                    config.set('Phonebook', name, number)
-        except Exception as e:
-            logging.error(str(e))
-            sys.exit(1)
-
-        with open('settings.ini', 'w') as configfile:
-            config.write(configfile)
-
-    numbers = config['Phonebook']
-    TOKEN = config['Tokens']['TOKEN']
-
-
-
-# Define a few command handlers. These usually take the two arguments update and
-# context.
-def start(update: Update, context: CallbackContext):
-    """Send a message when the command /start is issued."""
-    user = update.effective_user
-    update.message.reply_markdown_v2(
-        'Hi {}\!'.format(user.mention_markdown_v2()),
-        reply_markup=ForceReply(selective=True),
-    )
-
-
-def help_command(update: Update, context: CallbackContext):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
-
-
-def echo(update: Update, context: CallbackContext):
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
-
-def sim800l_bot(update: Update, context: CallbackContext):
-    """Echo the user message."""
-    text=update.message.text
-    if (text.split()[0].lower()=='call'):
-        name=text.split()[1].lower()
-        if (name in numbers):
-            update.message.reply_text('calling '+numbers[name])
-            call = SIM800L_utils.makeCall(numbers[name])
-            update.message.reply_text('Call success is {}'.format(call))
-
-    if (text.split()[0].lower()=='receive'):
-        smstext = SIM800L_utils.receiveSMS()
-        update.message.reply_text("Unread texts:")
-        for ss in smstext[1:-1]:
+            config.read_file(open('settings.ini'))
+        except FileNotFoundError:
             try:
-                if not ss.isspace():
-                    update.message.reply_text(ss)
+                tk=input("Insert telegram token >> ")
+                if tk:
+                    config['Tokens'] = {'TOKEN':tk}
+                else:
+                    logging.error('No telegram token given')
+                    sys.exit(1)
             except Exception as e:
-                logging.error(e)
+                logging.error(str(e))
+                sys.exit(1)
+            try:
+                name=' '
+                config.add_section('Phonebook')
+                while (name):
+                    name=input("enter name >> ")
+                    number=input("enter number >> ")
+                    if name and number:
+                        config.set('Phonebook', name, number)
+            except Exception as e:
+                logging.error(str(e))
+                sys.exit(1)
 
-   
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
 
-    # update.message.reply_text(update.message.text)
+        self.numbers = config['Phonebook']
+        self.TOKEN = config['Tokens']['TOKEN']
 
 
-def main(self):
 
-    """Start the bot."""
-    # Create the Updater and pass it your bot's token.
-    updater = Updater(self.TOKEN)
+    # Define a few command handlers. These usually take the two arguments update and
+    # context.
+    def start(update: Update, context: CallbackContext):
+        """Send a message when the command /start is issued."""
+        user = update.effective_user
+        update.message.reply_markdown_v2(
+            'Hi {}\!'.format(user.mention_markdown_v2()),
+            reply_markup=ForceReply(selective=True),
+        )
 
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
 
-    # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    def help_command(update: Update, context: CallbackContext):
+        """Send a message when the command /help is issued."""
+        update.message.reply_text('Help!')
 
-    # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, sim800l_bot))
 
-    # Start the Bot
-    updater.start_polling()
+    def echo(update: Update, context: CallbackContext):
+        """Echo the user message."""
+        update.message.reply_text(update.message.text)
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
-    updater.idle()
+    def sim800l_bot(update: Update, context: CallbackContext):
+        """Echo the user message."""
+        text=update.message.text
+        if (text.split()[0].lower()=='call'):
+            name=text.split()[1].lower()
+            if (name in numbers):
+                update.message.reply_text('calling '+numbers[name])
+                call = SIM800L_utils.makeCall(numbers[name])
+                update.message.reply_text('Call success is {}'.format(call))
+
+        if (text.split()[0].lower()=='receive'):
+            smstext = SIM800L_utils.receiveSMS()
+            update.message.reply_text("Unread texts:")
+            for ss in smstext[1:-1]:
+                try:
+                    if not ss.isspace():
+                        update.message.reply_text(ss)
+                except Exception as e:
+                    logging.error(e)
+
+    
+
+        # update.message.reply_text(update.message.text)
+
+
+    def main(self):
+
+        """Start the bot."""
+        # Create the Updater and pass it your bot's token.
+        updater = Updater(self.TOKEN)
+
+        # Get the dispatcher to register handlers
+        dispatcher = updater.dispatcher
+
+        # on different commands - answer in Telegram
+        dispatcher.add_handler(CommandHandler("start", self.start))
+        dispatcher.add_handler(CommandHandler("help", self.help_command))
+
+        # on non command i.e message - echo the message on Telegram
+        dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, self.sim800l_bot))
+
+        # Start the Bot
+        updater.start_polling()
+
+        # Run the bot until you press Ctrl-C or the process receives SIGINT,
+        # SIGTERM or SIGABRT. This should be used most of the time, since
+        # start_polling() is non-blocking and will stop the bot gracefully.
+        updater.idle()
 
 
 if __name__ == '__main__':
-    main(self)
+    bot().main()
