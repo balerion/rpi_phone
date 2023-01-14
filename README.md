@@ -25,7 +25,7 @@ python -m pip install pyserial
 gtts
 omxplayer-wrapper (https://python-omxplayer-wrapper.readthedocs.io/en/latest/)
 on mac, brew install dbus, pip install dbus-python
-python-telegram-bot
+python-telegram-bot==13.5
 
 adding audio to rpi zero
 https://learn.adafruit.com/introducing-the-raspberry-pi-zero/audio-outputs

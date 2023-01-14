@@ -53,7 +53,7 @@ class bot():
 
     # Define a few command handlers. These usually take the two arguments update and
     # context.
-    def start(update: Update, context: CallbackContext):
+    def start(self, update: Update, context: CallbackContext):
         """Send a message when the command /start is issued."""
         user = update.effective_user
         update.message.reply_markdown_v2(
@@ -62,16 +62,16 @@ class bot():
         )
 
 
-    def help_command(update: Update, context: CallbackContext):
+    def help_command(self, update: Update, context: CallbackContext):
         """Send a message when the command /help is issued."""
         update.message.reply_text('Help!')
 
 
-    def echo(update: Update, context: CallbackContext):
+    def echo(self, update: Update, context: CallbackContext):
         """Echo the user message."""
         update.message.reply_text(update.message.text)
 
-    def sim800l_bot(update: Update, context: CallbackContext):
+    def sim800l_bot(self, update: Update, context: CallbackContext):
         """Echo the user message."""
         text=update.message.text
         if (text.split()[0].lower()=='call'):
