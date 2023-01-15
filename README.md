@@ -23,7 +23,8 @@ sudo apt-get install gstreamer-1.0
 
 python -m pip install pyserial
 gtts
-omxplayer-wrapper (https://python-omxplayer-wrapper.readthedocs.io/en/latest/)
+<!-- omxplayer-wrapper (https://python-omxplayer-wrapper.readthedocs.io/en/latest/) -->
+python-vlc
 on mac, brew install dbus, pip install dbus-python
 python-telegram-bot==13.5
 

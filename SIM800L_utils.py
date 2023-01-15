@@ -4,8 +4,8 @@ import requests
 from SIM800L import SIM800L
 
 from gtts import gTTS 
-from omxplayer.player import OMXPlayer
 from pathlib import Path
+import vlc
 
 COMPORT_NAME = "/dev/serial0"
 filename = "quote.mp3"
@@ -14,7 +14,7 @@ filename = "quote.mp3"
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
-logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+logging.getLogger("vlc.player").setLevel(logging.CRITICAL + 1)
 
 
 ## function that gets the random quote
@@ -70,7 +70,7 @@ def makeCall(number):
     
     if success==2:
         try:
-            player = OMXPlayer(Path(filename))
+            player = vlc.MediaPlayer(Path(filename))
             logging.info(f'Playing?:{player.is_playing()}')
             player.play_sync()
         except Exception as e: 
@@ -97,7 +97,7 @@ def resetRadio():
 def main():
     # print(getQuote())
     try:
-        player = OMXPlayer(Path(filename))
+        player = vlc.MediaPlayer(Path(filename))
         logging.info(f'Playing?:{player.is_playing()}')
         player.play_sync()
     except Exception as err: 

@@ -1,5 +1,5 @@
 from gtts import gTTS 
-from omxplayer.player import OMXPlayer
+import vlc
 from pathlib import Path
 
 import requests
@@ -7,14 +7,13 @@ import requests
 def get_random_quote():
     try:
         ## making the get request
-        response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random")
+        response = requests.get("https://api.quotable.io/random")
         if response.status_code == 200:
             ## extracting the core data
             json_data = response.json()
-            data = json_data['data']
-
+            data = json_data['content']
             ## getting the quote from the data
-            return (data[0]['quoteText'])
+            return (data)
         else:
             return ("Error while getting quote")
     except:
@@ -23,16 +22,12 @@ def get_random_quote():
 
 def getQuote():
     text=get_random_quote()
-    print(text)
     tts = gTTS(text=text, lang='en')
     filename = "abc.mp3"
     tts.save(filename)
-    player = OMXPlayer(Path(filename))
-    while player.is_playing():
+    p = vlc.MediaPlayer(filename)#"abc.mp3"
+    p.play()
+    while p.get_state() != vlc.State.Ended:
         continue
-    # p = vlc.MediaPlayer(filename)"abc.mp3"
-    # p.play()
-    # os.system('mpg321 abc.mp3 &')
-    # os.remove(filename)
     return text
 
