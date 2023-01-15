@@ -71,7 +71,9 @@ def makeCall(number):
         try:
             player = vlc.MediaPlayer(Path(filename))
             logging.info(f'Playing?:{player.is_playing()}')
-            player.play_sync()
+            player.play()
+            while player.get_state() != vlc.State.Ended:
+                continue
         except Exception as e: 
             logging.error("Error: " + str(e))
         # os.remove(filename)
@@ -98,7 +100,10 @@ def main():
     try:
         player = vlc.MediaPlayer(Path(filename))
         logging.info(f'Playing?:{player.is_playing()}')
-        player.play_sync()
+        player.play()
+        while player.get_state() != vlc.State.Ended:
+            continue
+
     except Exception as err: 
         logging.error(str(err))
     
