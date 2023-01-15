@@ -22,14 +22,13 @@ def get_random_quote():
     try:
         ## making the get request
         # response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=anger")
-        response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random")
+        response = requests.get("https://api.quotable.io/random")
         if response.status_code == 200:
             ## extracting the core data
             json_data = response.json()
-            data = json_data['data']
-
+            data = json_data['content']
             ## getting the quote from the data
-            return (data[0]['quoteText'])
+            return (data)
         else:
             return ("Error while getting quote")
     except:
