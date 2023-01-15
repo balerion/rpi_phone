@@ -31,3 +31,4 @@ def getQuote():
         continue
     return text
 
+getQuote()
