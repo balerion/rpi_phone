@@ -107,7 +107,10 @@ def changeSim(simno):
     bits = bin(simno)[2:]
 
     for bitno,gpio in enumerate(gpios):
-        GPIO.output(gpio, int(bits[bitno]))
+        try:
+            GPIO.output(gpio, int(bits[bitno]))
+        except IndexError:
+            GPIO.output(gpio, 0)
 
     resetRadio()
 
