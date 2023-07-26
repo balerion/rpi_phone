@@ -2,7 +2,7 @@ import sys
 import logging
 import requests
 from SIM800L import SIM800L
-import GPIO
+import RPi.GPIO as GPIO
 
 from gtts import gTTS 
 from pathlib import Path
