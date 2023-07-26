@@ -2,6 +2,7 @@ import sys
 import logging
 import requests
 from SIM800L import SIM800L
+import GPIO
 
 from gtts import gTTS 
 from pathlib import Path
@@ -93,6 +94,22 @@ def resetRadio():
     sim800l.sendAtCommand(command="AT+CFUN=1")
     sim800l.closeComPort()
     return 1
+
+def changeSim(simno):
+
+    gpios=(12,16,20)
+    enable=21
+    GPIO.setup(enable, GPIO.OUT)
+    GPIO.output(enable, 0)
+    for gpio in gpios:
+        GPIO.setup(gpio, GPIO.OUT)
+
+    bits = bin(simno)[2:]
+
+    for bitno,gpio in enumerate(gpios):
+        GPIO.output(gpio, int(bits[bitno]))
+
+    resetRadio()
 
 
 def main():
