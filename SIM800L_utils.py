@@ -96,7 +96,7 @@ def resetRadio():
     return 1
 
 def changeSim(simno):
-
+    GPIO.setmode(GPIO.BCM)
     gpios=(12,16,20)
     enable=21
     GPIO.setup(enable, GPIO.OUT)
