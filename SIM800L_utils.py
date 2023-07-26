@@ -4,8 +4,8 @@ import requests
 from SIM800L import SIM800L
 
 from gtts import gTTS 
-from omxplayer.player import OMXPlayer
 from pathlib import Path
+import vlc
 
 COMPORT_NAME = "/dev/serial0"
 filename = "quote.mp3"
@@ -14,7 +14,7 @@ filename = "quote.mp3"
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
-logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+logging.getLogger("vlc.player").setLevel(logging.CRITICAL + 1)
 
 
 ## function that gets the random quote
@@ -22,14 +22,13 @@ def get_random_quote():
     try:
         ## making the get request
         # response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=anger")
-        response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random")
+        response = requests.get("https://api.quotable.io/random")
         if response.status_code == 200:
             ## extracting the core data
             json_data = response.json()
-            data = json_data['data']
-
+            data = json_data['content']
             ## getting the quote from the data
-            return (data[0]['quoteText'])
+            return (data)
         else:
             return ("Error while getting quote")
     except:
@@ -70,9 +69,11 @@ def makeCall(number):
     
     if success==2:
         try:
-            player = OMXPlayer(Path(filename))
+            player = vlc.MediaPlayer(Path(filename))
             logging.info(f'Playing?:{player.is_playing()}')
-            player.play_sync()
+            player.play()
+            while player.get_state() != vlc.State.Ended:
+                continue
         except Exception as e: 
             logging.error("Error: " + str(e))
         # os.remove(filename)
@@ -97,9 +98,12 @@ def resetRadio():
 def main():
     # print(getQuote())
     try:
-        player = OMXPlayer(Path(filename))
+        player = vlc.MediaPlayer(Path(filename))
         logging.info(f'Playing?:{player.is_playing()}')
-        player.play_sync()
+        player.play()
+        while player.get_state() != vlc.State.Ended:
+            continue
+
     except Exception as err: 
         logging.error(str(err))
     

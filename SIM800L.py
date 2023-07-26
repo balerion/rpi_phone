@@ -11,7 +11,7 @@ import time, sys
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logging.getLogger("omxplayer.player").setLevel(logging.CRITICAL + 1)
+logging.getLogger("vlc.player").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger(__name__)
 
 class SIM800L:
