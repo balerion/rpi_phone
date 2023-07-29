@@ -71,7 +71,7 @@ class bot():
             # if user_id not in self.admins:
             #     print("Unauthorized access denied for {}.".format(user_id))
             #     return
-            return func(update, context, *args, **kwargs)
+            return func(self, update, context, *args, **kwargs)
         return wrapped
 
 
