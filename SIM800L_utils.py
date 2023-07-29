@@ -1,6 +1,7 @@
 import sys
 import logging
 import requests
+import time
 from SIM800L import SIM800L
 import RPi.GPIO as GPIO
 
@@ -10,6 +11,8 @@ import vlc
 
 COMPORT_NAME = "/dev/serial0"
 filename = "quote.mp3"
+
+timeout_seconds = 10
 
 GPIO.setwarnings(False)
 
@@ -94,7 +97,17 @@ def resetRadio():
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
     sim800l.sendAtCommand(command="AT+CFUN=1")
-    reg = sim800l.checkRegistration()
+    start_time = time.time()
+    while time.time() - start_time < timeout_seconds:
+        time.sleep(0.5)
+        reg = sim800l.checkRegistration()
+        if "0,5" in reg[1]:
+            break
+    else:
+        # This block is executed when the loop naturally exits without a break
+        logging.info("could not register to network")
+
+    
     sim800l.closeComPort()
     return reg
 
