@@ -113,6 +113,7 @@ def changeSim(simno):
             GPIO.output(gpio, 0)
 
     resetRadio()
+    # TODO: check for "Call ready" and CCID and CREG = 0,5
 
 
 def main():
