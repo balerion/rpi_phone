@@ -66,7 +66,7 @@ class bot():
     def restricted(func):
         @wraps(func)
         def wrapped(self, update, context, *args, **kwargs):
-            # user_id = update.effective_user.id
+            user_id = update.effective_user.id
             logging.info(user_id,self.admins)
             # if user_id not in self.admins:
             #     print("Unauthorized access denied for {}.".format(user_id))
