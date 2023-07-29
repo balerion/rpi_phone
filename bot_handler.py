@@ -43,13 +43,14 @@ class bot():
             except Exception as e:
                 logging.error(str(e))
                 sys.exit(1)
-
             try:
+                name=' '
                 config.add_section('Admins')
-                admin = 1
-                while (admin):
-                    admin=input("enter admin user id >> ")
-                    config.set('Admins', admin)
+                while (name):
+                    name=input("enter admin name >> ")
+                    number=input("enter admin id >> ")
+                    if name and number:
+                        config.set('Admins', name, number)
             except Exception as e:
                 logging.error(str(e))
                 sys.exit(1)
@@ -66,6 +67,7 @@ class bot():
         @wraps(func)
         def wrapped(self, update, context, *args, **kwargs):
             user_id = update.effective_user.id
+            logging.info(user_id,self.admins)
             if user_id not in self.admins:
                 print("Unauthorized access denied for {}.".format(user_id))
                 return
