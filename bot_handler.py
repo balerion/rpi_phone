@@ -7,6 +7,22 @@ import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+
+
+from functools import wraps
+
+LIST_OF_ADMINS = [12345678, 87654321] # List of user_id of authorized users
+
+def restricted(func):
+    @wraps(func)
+    def wrapped(update, context, *args, **kwargs):
+        user_id = update.effective_user.id
+        if user_id not in LIST_OF_ADMINS:
+            print("Unauthorized access denied for {}.".format(user_id))
+            return
+        return func(update, context, *args, **kwargs)
+    return wrapped
+
 class bot():
     TOKEN=0
     def __init__(self):
@@ -71,8 +87,9 @@ class bot():
         """Echo the user message."""
         update.message.reply_text(update.message.text)
 
+
+    @restricted
     def sim800l_bot(self, update: Update, context: CallbackContext):
-        """Echo the user message."""
         text=update.message.text
         if (text.split()[0].lower()=='call'):
             name=text.split()[1].lower()
@@ -100,8 +117,12 @@ class bot():
             SIM800L_utils.resetRadio()
     
 
-        # update.message.reply_text(update.message.text)
-
+# TODO: add bot safety.
+# needs to:
+# 1) generate token and access link only in console (not via chat)
+# 2) if token used or timeout elapsed, delete token and not accept it anymore
+# 3) when token used, add chat id to accepted chat ids in settings
+# 4) restrict sim access to users in list
 
     def main(self):
 
