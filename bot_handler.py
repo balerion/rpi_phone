@@ -59,16 +59,15 @@ class bot():
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
 
-        self.numbers = config['Phonebook']
+        self.numbers = dict(config['Phonebook'])
         self.TOKEN = config['Tokens']['TOKEN']
-        self.admins = config['Admins']
+        self.admins = dict(config['Admins'])
 
     def restricted(func):
         @wraps(func)
         def wrapped(self, update, context, *args, **kwargs):
             user_id = update.effective_user.id
-            logging.info(self.admins.values())
-            if user_id not in self.admins.values():
+            if str(user_id) not in self.admins.values():
                 print("Unauthorized access denied for {}.".format(user_id))
                 return
             return func(self, update, context, *args, **kwargs)
@@ -133,7 +132,6 @@ class bot():
 # 4) restrict sim access to users in list
 
     def main(self):
-
         """Start the bot."""
         # Create the Updater and pass it your bot's token.
         updater = Updater(self.TOKEN)
