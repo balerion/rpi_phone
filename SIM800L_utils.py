@@ -103,9 +103,15 @@ def resetRadio():
         while time.time() - start_time < timeout_seconds:
             time.sleep(0.1)
             ret = sim800l.attemptRead()
-            logging.info(ret)
-            if "Call ready" in ret:
-                break
+            if ret:
+                logging.info(ret)
+                for rr in ret:
+                    if "Call Ready" in ret:
+                        break
+                else:
+                    continue  # This will only be executed if the inner loop doesn't break
+                break  # This will break out of the outer loop
+
 
     start_time = time.time()
     while time.time() - start_time < timeout_seconds:
