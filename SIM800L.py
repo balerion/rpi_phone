@@ -74,6 +74,12 @@ class SIM800L:
             return False
         return True
 
+    def checkRegistration(self):
+        reg = self.sendAtCommand("AT+CREG?")
+        if not reg:
+            return False
+        return reg
+
     def initATSettings(self):
         if not self.sendAtCommand("AT+MORING=1"):
             return False

@@ -95,7 +95,8 @@ def resetRadio():
     sim800l.sendAtCommand(command="AT+CFUN=0")
     sim800l.sendAtCommand(command="AT+CFUN=1")
     sim800l.closeComPort()
-    return 1
+    reg = sim800l.checkRegistration()
+    return reg
 
 def changeSim(simno):
     GPIO.setmode(GPIO.BCM)
@@ -114,7 +115,8 @@ def changeSim(simno):
         except IndexError:
             GPIO.output(gpio, 0)
 
-    resetRadio()
+    reg = resetRadio()
+    logging.info(reg)
     # TODO: check for "Call ready" and CCID and CREG = 0,5
 
 
