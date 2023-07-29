@@ -30,3 +30,9 @@ python-telegram-bot==13.5
 
 adding audio to rpi zero
 https://learn.adafruit.com/introducing-the-raspberry-pi-zero/audio-outputs
+
+necessary libs:
+pip3 install RPi.GPIO (create RPi folder with proper stuff in it for dev purposes)
+pip3 install gtts
+pip3 install python-vlc
+pip3 install python-telegram-bot==13.13
