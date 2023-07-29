@@ -166,6 +166,11 @@ class SIM800L:
             logging.error("To send AT command: ATM")
             return 0
         return 1
+    
+    def radioOff():
+        if not self.sendAtCommand("AT+CFUN=0"):
+            logging.error("To send AT command: ATM")
+            return 0
 
 if __name__ == "__main__":
     print("asd")

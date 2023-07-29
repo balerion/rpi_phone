@@ -11,6 +11,8 @@ import vlc
 COMPORT_NAME = "/dev/serial0"
 filename = "quote.mp3"
 
+GPIO.setwarnings(False)
+
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -53,8 +55,8 @@ def receiveSMS():
 
 
 def makeCall(number):
-    print('making call...')
-    print(getQuote())
+    logging.info('getting quote, making call...')
+    logging.info(print(getQuote()))
 
     # logging.basicConfig(level=logging.DEBUG)
 

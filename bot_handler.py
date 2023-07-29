@@ -6,6 +6,7 @@ import sys
 import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from functools import wraps
 
 class bot():
     TOKEN=0
@@ -42,13 +43,35 @@ class bot():
             except Exception as e:
                 logging.error(str(e))
                 sys.exit(1)
+            try:
+                name=' '
+                config.add_section('Admins')
+                while (name):
+                    name=input("enter admin name >> ")
+                    number=input("enter admin id >> ")
+                    if name and number:
+                        config.set('Admins', name, number)
+            except Exception as e:
+                logging.error(str(e))
+                sys.exit(1)
+
 
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
 
-        self.numbers = config['Phonebook']
+        self.numbers = dict(config['Phonebook'])
         self.TOKEN = config['Tokens']['TOKEN']
+        self.admins = dict(config['Admins'])
 
+    def restricted(func):
+        @wraps(func)
+        def wrapped(self, update, context, *args, **kwargs):
+            user_id = update.effective_user.id
+            if str(user_id) not in self.admins.values():
+                print("Unauthorized access denied for {}.".format(user_id))
+                return
+            return func(self, update, context, *args, **kwargs)
+        return wrapped
 
 
     # Define a few command handlers. These usually take the two arguments update and
@@ -71,8 +94,9 @@ class bot():
         """Echo the user message."""
         update.message.reply_text(update.message.text)
 
+
+    @restricted
     def sim800l_bot(self, update: Update, context: CallbackContext):
-        """Echo the user message."""
         text=update.message.text
         if (text.split()[0].lower()=='call'):
             name=text.split()[1].lower()
@@ -100,11 +124,14 @@ class bot():
             SIM800L_utils.resetRadio()
     
 
-        # update.message.reply_text(update.message.text)
-
+# TODO: add bot safety.
+# needs to:
+# 1) generate token and access link only in console (not via chat)
+# 2) if token used or timeout elapsed, delete token and not accept it anymore
+# 3) when token used, add chat id to accepted chat ids in settings
+# 4) restrict sim access to users in list
 
     def main(self):
-
         """Start the bot."""
         # Create the Updater and pass it your bot's token.
         updater = Updater(self.TOKEN)
@@ -126,6 +153,8 @@ class bot():
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
         updater.idle()
+        #SIM800L.radioOff()
+        #logging.info("Turned radio off. Bye!")
 
 
 if __name__ == '__main__':
