@@ -106,7 +106,7 @@ def resetRadio():
             if ret:
                 logging.info(ret)
                 for rr in ret:
-                    if "Call Ready" in ret:
+                    if "Call Ready" in rr:
                         break
                 else:
                     continue  # This will only be executed if the inner loop doesn't break
