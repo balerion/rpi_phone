@@ -13,15 +13,6 @@ from functools import wraps
 
 LIST_OF_ADMINS = [12345678, 87654321] # List of user_id of authorized users
 
-def restricted(func):
-    @wraps(func)
-    def wrapped(update, context, *args, **kwargs):
-        user_id = update.effective_user.id
-        if user_id not in LIST_OF_ADMINS:
-            print("Unauthorized access denied for {}.".format(user_id))
-            return
-        return func(update, context, *args, **kwargs)
-    return wrapped
 
 class bot():
     TOKEN=0
@@ -65,6 +56,15 @@ class bot():
         self.numbers = config['Phonebook']
         self.TOKEN = config['Tokens']['TOKEN']
 
+    def restricted(func):
+        @wraps(func)
+        def wrapped(self, update, context, *args, **kwargs):
+            user_id = update.effective_user.id
+            if user_id not in LIST_OF_ADMINS:
+                print("Unauthorized access denied for {}.".format(user_id))
+                return
+            return func(update, context, *args, **kwargs)
+        return wrapped
 
 
     # Define a few command handlers. These usually take the two arguments update and
