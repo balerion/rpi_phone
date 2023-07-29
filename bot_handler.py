@@ -81,6 +81,11 @@ class bot():
                 call = SIM800L_utils.makeCall(self.numbers[name])
                 update.message.reply_text('Call success is {}'.format(call))
 
+        if (text.split()[0].lower()=='sim'):
+            simno=int(text.split()[1])
+            SIM800L_utils.changeSim(simno)
+            update.message.reply_text(f'changed to sim number {simno}')
+
         if (text.split()[0].lower()=='receive'):
             smstext = SIM800L_utils.receiveSMS()
             update.message.reply_text("Unread texts:")

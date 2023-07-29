@@ -2,6 +2,7 @@ import sys
 import logging
 import requests
 from SIM800L import SIM800L
+import RPi.GPIO as GPIO
 
 from gtts import gTTS 
 from pathlib import Path
@@ -93,6 +94,26 @@ def resetRadio():
     sim800l.sendAtCommand(command="AT+CFUN=1")
     sim800l.closeComPort()
     return 1
+
+def changeSim(simno):
+    GPIO.setmode(GPIO.BCM)
+    gpios=(12,16,20)
+    enable=21
+    GPIO.setup(enable, GPIO.OUT)
+    GPIO.output(enable, 0)
+    for gpio in gpios:
+        GPIO.setup(gpio, GPIO.OUT)
+
+    bits = bin(simno)[2:]
+
+    for bitno,gpio in enumerate(gpios):
+        try:
+            GPIO.output(gpio, int(bits[bitno]))
+        except IndexError:
+            GPIO.output(gpio, 0)
+
+    resetRadio()
+    # TODO: check for "Call ready" and CCID and CREG = 0,5
 
 
 def main():
