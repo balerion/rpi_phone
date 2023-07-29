@@ -18,7 +18,7 @@ GPIO.setwarnings(False)
 
 # Enable logging
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
 )
 logging.getLogger("vlc.player").setLevel(logging.CRITICAL + 1)
 
@@ -96,7 +96,8 @@ def resetRadio():
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
-    sim800l.sendAtCommand(command="AT+CFUN=1")
+    ret = sim800l.sendAtCommand(command="AT+CFUN=1")
+    logging.debug(ret)
     start_time = time.time()
     while time.time() - start_time < timeout_seconds:
         time.sleep(0.5)
@@ -109,7 +110,7 @@ def resetRadio():
 
     
     sim800l.closeComPort()
-    return reg
+    return 0
 
 def changeSim(simno):
     GPIO.setmode(GPIO.BCM)
@@ -128,8 +129,7 @@ def changeSim(simno):
         except IndexError:
             GPIO.output(gpio, 0)
 
-    reg = resetRadio()
-    logging.info(reg)
+    resetRadio()
     # TODO: check for "Call ready" and CCID and CREG = 0,5
 
 
