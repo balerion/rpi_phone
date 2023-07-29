@@ -94,8 +94,8 @@ def resetRadio():
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
     sim800l.sendAtCommand(command="AT+CFUN=1")
-    sim800l.closeComPort()
     reg = sim800l.checkRegistration()
+    sim800l.closeComPort()
     return reg
 
 def changeSim(simno):
