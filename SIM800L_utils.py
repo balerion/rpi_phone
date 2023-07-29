@@ -97,7 +97,7 @@ def resetRadio():
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
     ret = sim800l.sendAtCommand(command="AT+CFUN=1")
-    logging.debug(ret)
+    logging.info(ret)
     start_time = time.time()
     while time.time() - start_time < timeout_seconds:
         time.sleep(0.5)
