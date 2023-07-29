@@ -96,8 +96,14 @@ def resetRadio():
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
-    ret = sim800l.sendAtCommand(command="AT+CFUN=1")
-    logging.info(ret)
+
+    if "+CPIN: READY" in sim800l.sendAtCommand(command="AT+CFUN=1"):
+        start_time = time.time()
+        while time.time() - start_time < timeout_seconds:
+            time.sleep(0.1)
+            ret = sim800l.attemptRead()
+            logging.info(ret)
+
     start_time = time.time()
     while time.time() - start_time < timeout_seconds:
         time.sleep(0.5)

@@ -69,6 +69,10 @@ class SIM800L:
             print("Couldn't write on " + self.portName)
             return False
 
+    def attemptRead(self):
+        received = [ll.decode('cp1252') for ll in self.ser.readlines()]
+        return received
+
     def checkCommunication(self):
         if not self.sendAtCommand("AT"):
             return False
