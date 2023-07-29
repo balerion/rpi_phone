@@ -53,8 +53,8 @@ def receiveSMS():
 
 
 def makeCall(number):
-    print('making call...')
-    print(getQuote())
+    logging.info('getting quote, making call...')
+    logging.info(print(getQuote()))
 
     # logging.basicConfig(level=logging.DEBUG)
 
