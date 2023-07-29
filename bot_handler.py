@@ -68,6 +68,7 @@ class bot():
         def wrapped(self, update, context, *args, **kwargs):
             user_id = update.effective_user.id
             logging.info(user_id,self.admins)
+            print(self.admins)
             # if user_id not in self.admins:
             #     print("Unauthorized access denied for {}.".format(user_id))
             #     return
@@ -155,8 +156,8 @@ class bot():
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
         updater.idle()
-        SIM800L_utils.radioOff()
-        logging.info("Turned radio off. Bye!")
+        #SIM800L.radioOff()
+        #logging.info("Turned radio off. Bye!")
 
 
 if __name__ == '__main__':
