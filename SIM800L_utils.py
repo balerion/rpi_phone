@@ -127,7 +127,7 @@ def resetRadio():
     else:
         logging.info("Sim com switch failed")
         return -2
-    iccid = sim800l.getCID()
+    iccid = sim800l.getCID()[1]
     sim800l.closeComPort()
     return iccid
     #TODO: print errors to telegram
