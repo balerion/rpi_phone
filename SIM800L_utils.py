@@ -112,20 +112,24 @@ def resetRadio():
                     continue  # This will only be executed if the inner loop doesn't break
                 break  # This will break out of the outer loop
 
-
-    start_time = time.time()
-    while time.time() - start_time < timeout_seconds:
-        time.sleep(0.5)
-        reg = sim800l.checkRegistration()
-        if "0,5" in reg[1]:
-            break
+        start_time = time.time()
+        while time.time() - start_time < timeout_seconds:
+            time.sleep(0.5)
+            logging.disabled = True
+            reg = sim800l.checkRegistration()
+            logging.disabled = False
+            if "0,5" in reg[1]:
+                break
+        else:
+            # This block is executed when the loop naturally exits without a break
+            logging.info("Could not register to network")
+            return -1
     else:
-        # This block is executed when the loop naturally exits without a break
-        logging.info("could not register to network")
-
+        logging.info("Sim com switch failed")
+        return -2
     
     sim800l.closeComPort()
-    return 0
+    return 1
 
 def changeSim(simno):
     GPIO.setmode(GPIO.BCM)
@@ -144,7 +148,7 @@ def changeSim(simno):
         except IndexError:
             GPIO.output(gpio, 0)
 
-    resetRadio()
+    return resetRadio()
     # TODO: check for "Call ready" and CCID and CREG = 0,5
 
 
