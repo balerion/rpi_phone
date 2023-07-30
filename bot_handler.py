@@ -111,7 +111,7 @@ class bot():
             if simchange>=0:
                 update.message.reply_text(f'changed to sim number {simno}')
             else:
-                update.message.reply_text(f'failed to cahnge sim (error code {simchange}')
+                update.message.reply_text(f'failed to change sim (error code {simchange})')
 
         if (text.split()[0].lower()=='receive'):
             smstext = SIM800L_utils.receiveSMS()
