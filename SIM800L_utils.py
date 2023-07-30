@@ -127,10 +127,14 @@ def resetRadio():
     else:
         logging.info("Sim com switch failed")
         return -2
-    
+    iccid = sim800l.getCID()
     sim800l.closeComPort()
-    return 1
-
+    return iccid
+    #TODO: print errors to telegram
+    #TODO: return sim CID and name after switching
+    #TODO: switch using sim name, number, or CID
+    #TODO: loop 10 times or until sim connects
+    
 def changeSim(simno):
     GPIO.setmode(GPIO.BCM)
     gpios=(12,16,20)

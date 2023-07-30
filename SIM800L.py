@@ -88,6 +88,12 @@ class SIM800L:
         if not self.sendAtCommand("AT+MORING=1"):
             return False
         return True
+    
+    def getCID(self):
+        iccid = self.sendAtCommand("AT+CCID")
+        if not iccid:
+            return False
+        return iccid
  
 
     def sendSms(self):
