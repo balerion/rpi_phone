@@ -113,8 +113,6 @@ class bot():
             else:
                 iccid = simchange
 
-            logging.info(iccid)
-                
             if iccid>=0:
                 update.message.reply_text(f'changed to sim number {simno}, iccid {iccid}')
             else:
