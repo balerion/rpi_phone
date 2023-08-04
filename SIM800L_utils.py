@@ -28,7 +28,7 @@ def get_random_quote():
     try:
         ## making the get request
         # response = requests.get("https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=anger")
-        response = requests.get("https://api.quotable.io/random")
+        response = requests.get("https://api.quotable.io/quotes/random")
         if response.status_code == 200:
             ## extracting the core data
             json_data = response.json()
@@ -131,7 +131,7 @@ def resetRadio():
     sim800l.closeComPort()
     return iccid
     #TODO: print errors to telegram
-    #TODO: return sim CID and name after switching
+    #TODO: return sim name after switching
     #TODO: switch using sim name, number, or CID
     #TODO: loop 10 times or until sim connects
     
