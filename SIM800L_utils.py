@@ -31,7 +31,7 @@ def get_random_quote():
         response = requests.get("https://api.quotable.io/quotes/random")
         if response.status_code == 200:
             ## extracting the core data
-            json_data = response.json()
+            json_data = response.json()[0]
             data = json_data['content']
             ## getting the quote from the data
             return (data)
@@ -157,7 +157,7 @@ def changeSim(simno):
 
 
 def main():
-    # print(getQuote())
+    logging.info(get_random_quote())
     try:
         player = vlc.MediaPlayer(Path(filename))
         logging.info(f'Playing?:{player.is_playing()}')
