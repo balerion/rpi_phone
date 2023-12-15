@@ -137,14 +137,14 @@ def resetRadio():
     
 def changeSim(simno):
     GPIO.setmode(GPIO.BCM)
-    gpios=(12,16,20)
+    gpios=(20,16,12)
     enable=21
     GPIO.setup(enable, GPIO.OUT)
     GPIO.output(enable, 0)
     for gpio in gpios:
         GPIO.setup(gpio, GPIO.OUT)
 
-    bits = bin(simno)[2:]
+    bits = format(simno, '#010b')[8:]
 
     for bitno,gpio in enumerate(gpios):
         try:
