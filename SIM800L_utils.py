@@ -184,5 +184,6 @@ if __name__ == "__main__":
         GPIO.output(gpio, 0)
     GPIO.output(enable, 1)
 
+    print (resetRadio())
     logging.info("End of module")
 # EOF
