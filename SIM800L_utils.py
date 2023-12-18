@@ -172,6 +172,17 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-    print("End of module")
+    # main()
+    GPIO.setmode(GPIO.BCM)
+    gpios=(12,16,20)
+    enable=21
+    GPIO.setup(enable, GPIO.OUT)
+    GPIO.output(enable, 0)
+    for gpio in gpios:
+        GPIO.setup(gpio, GPIO.OUT)
+    for gpio in gpios:
+        GPIO.output(gpio, 0)
+    GPIO.output(enable, 1)
+
+    logging.info("End of module")
 # EOF
