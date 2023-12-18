@@ -172,6 +172,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    changeSim(0)
     print("End of module")
 # EOF
