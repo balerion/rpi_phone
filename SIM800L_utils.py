@@ -181,8 +181,7 @@ if __name__ == "__main__":
     for gpio in gpios:
         GPIO.setup(gpio, GPIO.OUT)
     for gpio in gpios:
-        GPIO.output(gpio, 1)
-    GPIO.output(enable, 0)
+        GPIO.output(gpio, 0)
 
     print (resetRadio())
     logging.info("End of module")
