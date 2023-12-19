@@ -173,6 +173,16 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    changeSim(0)
-    print("End of module")
+    GPIO.setmode(GPIO.BCM)
+    gpios=(12,16,20)
+    enable=21
+    GPIO.setup(enable, GPIO.OUT)
+    GPIO.output(enable, 0)
+    for gpio in gpios:
+        GPIO.setup(gpio, GPIO.OUT)
+
+    for bitno,gpio in enumerate(gpios):
+        GPIO.output(gpio, 0)
+
+    print(resetRadio())
 # EOF
