@@ -62,6 +62,7 @@ class bot():
         self.numbers = dict(config['Phonebook'])
         self.TOKEN = config['Tokens']['TOKEN']
         self.admins = dict(config['Admins'])
+        self.simnames = dict(config['Sims'])
 
     def restricted(func):
         @wraps(func)
@@ -114,7 +115,8 @@ class bot():
                 iccid = simchange
 
             if iccid>=0:
-                update.message.reply_text(f'changed to sim number {simno}, iccid {iccid}')
+                simname = list(self.simnames.keys())[list(self.simnames.values()).index(iccid)]
+                update.message.reply_text(f'changed to sim number {simno}, iccid {iccid} ({simname})')
             else:
                 update.message.reply_text(f'failed to change sim (error code {simchange})')
 
