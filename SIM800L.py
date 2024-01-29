@@ -69,15 +69,31 @@ class SIM800L:
             print("Couldn't write on " + self.portName)
             return False
 
+    def attemptRead(self):
+        received = [ll.decode('cp1252') for ll in self.ser.readlines()]
+        return received
+
     def checkCommunication(self):
         if not self.sendAtCommand("AT"):
             return False
         return True
 
+    def checkRegistration(self):
+        reg = self.sendAtCommand("AT+CREG?")
+        if not reg:
+            return False
+        return reg
+
     def initATSettings(self):
         if not self.sendAtCommand("AT+MORING=1"):
             return False
         return True
+    
+    def getCID(self):
+        iccid = self.sendAtCommand("AT+CCID")
+        if not iccid:
+            return False
+        return iccid
  
 
     def sendSms(self):

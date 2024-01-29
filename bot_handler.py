@@ -107,8 +107,16 @@ class bot():
 
         if (text.split()[0].lower()=='sim'):
             simno=int(text.split()[1])
-            SIM800L_utils.changeSim(simno)
-            update.message.reply_text(f'changed to sim number {simno}')
+            simchange = SIM800L_utils.changeSim(simno)
+            if isinstance(simchange, str):
+                iccid = int(''.join(char for char in str(simchange) if str(char).isdigit()))
+            else:
+                iccid = simchange
+
+            if iccid>=0:
+                update.message.reply_text(f'changed to sim number {simno}, iccid {iccid}')
+            else:
+                update.message.reply_text(f'failed to change sim (error code {simchange})')
 
         if (text.split()[0].lower()=='receive'):
             smstext = SIM800L_utils.receiveSMS()
