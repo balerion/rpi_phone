@@ -115,7 +115,10 @@ class bot():
                 iccid = simchange
 
             if iccid>=0:
-                simname = list(self.simnames.keys())[list(self.simnames.values()).index(iccid)]
+                try:
+                    simname = list(self.simnames.keys())[list(self.simnames.values()).index(stru(iccid))]
+                except:
+                    simname = 'unknown'
                 update.message.reply_text(f'changed to sim number {simno}, iccid {iccid} ({simname})')
             else:
                 update.message.reply_text(f'failed to change sim (error code {simchange})')
