@@ -133,6 +133,9 @@ class bot():
                 except Exception as e:
                     logging.error(e)
 
+        if (text.split()[0].lower()=='clear'):
+            SIM800L_utils.clearSMS()
+
         if (text.split()[0].lower()=='reset'):
             SIM800L_utils.resetRadio()
     

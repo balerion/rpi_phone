@@ -52,9 +52,16 @@ def receiveSMS():
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CMGF=1")
-    allsms = sim800l.sendAtCommand(command="AT+CMGL=\"REC UNREAD\"")
+    allsms = sim800l.sendAtCommand(command="AT+CMGL=\"ALL\"")
     sim800l.closeComPort()
     return allsms
+
+def clearSMS():
+    sim800l = SIM800L(portName=COMPORT_NAME)
+    sim800l.openComPort()
+    response = sim800l.sendAtCommand(command="AT+CMGD=1,3")
+    sim800l.closeComPort()
+    return response
 
 
 def makeCall(number):
