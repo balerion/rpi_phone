@@ -103,37 +103,43 @@ def resetRadio():
     sim800l = SIM800L(portName=COMPORT_NAME)
     sim800l.openComPort()
     sim800l.sendAtCommand(command="AT+CFUN=0")
+    time.sleep(1)
+    response = sim800l.sendAtCommand(command="AT+CFUN=1")
+    # try to see idf response has more than one element using try
+    try:
+        if "+CPIN: READY" in response[1]:
+            logging.info("Testing for call ready")
+            start_time = time.time()
+            while time.time() - start_time < timeout_seconds:
+                time.sleep(0.1)
+                ret = sim800l.attemptRead()
+                if ret:
+                    for rr in ret:
+                        if "Call Ready" in rr:
+                            logging.info("Ok, call ready!")
+                            break
+                    else:
+                        continue  # This will only be executed if the inner loop doesn't break
+                    break  # This will break out of the outer loop
 
-    if "+CPIN: READY" in sim800l.sendAtCommand(command="AT+CFUN=1")[1]:
-        logging.info("Testing for call ready")
-        start_time = time.time()
-        while time.time() - start_time < timeout_seconds:
-            time.sleep(0.1)
-            ret = sim800l.attemptRead()
-            if ret:
-                for rr in ret:
-                    if "Call Ready" in rr:
-                        logging.info("Ok, call ready!")
-                        break
-                else:
-                    continue  # This will only be executed if the inner loop doesn't break
-                break  # This will break out of the outer loop
-
-        start_time = time.time()
-        while time.time() - start_time < timeout_seconds:
-            time.sleep(1)
-            logging.disabled = True
-            reg = sim800l.checkRegistration()
-            logging.disabled = False
-            if "0,5" in reg[1]:
-                break
+            start_time = time.time()
+            while time.time() - start_time < timeout_seconds:
+                time.sleep(1)
+                logging.disabled = True
+                reg = sim800l.checkRegistration()
+                logging.disabled = False
+                if "0,5" in reg[1]:
+                    break
+            else:
+                # This block is executed when the loop naturally exits without a break
+                logging.info("Could not register to network")
+                return -1
         else:
-            # This block is executed when the loop naturally exits without a break
-            logging.info("Could not register to network")
-            return -1
-    else:
-        logging.info("Sim com switch failed")
-        return -2
+            logging.info("Sim com switch failed")
+            return -2
+    except IndexError:
+        logging.info("No response from radio")
+        return -3
     iccid = sim800l.getCID()[1]
     sim800l.closeComPort()
     return iccid
